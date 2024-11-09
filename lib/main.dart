@@ -76,14 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Badge(child: Icon(Icons.add)),
+            icon:  Icon(Icons.add),
             label: 'Report',
           ),
           NavigationDestination(
-            icon: Badge(
-              label: Text('2'),
-              child: Icon(Icons.account_circle_outlined),
-            ),
+            icon: Icon(Icons.account_circle_outlined),
             label: 'Profile',
           ),
         ],
