@@ -62,13 +62,38 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: const Color(0xFFFEFAE0),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(140),
+        child: currentPageIndex == 0 || currentPageIndex == 1  // Show header only for Home and Report pages
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical:50),
+                color: const Color(0xFFFEFAE0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Logo on the left
+                    Image.asset(
+                      'assets/images/FIXCITYWORD.png',  // Replace with your logo path
+                      height: 30,  // Adjust size of logo
+                    ),
+                    // Profile image on the right
+                    const CircleAvatar(
+                      radius: 25,
+                      backgroundImage: AssetImage('assets/profile.jpg'), // Replace with your profile image path
+                    ),
+                  ],
+                ),
+              )
+            : const SizedBox.shrink(),
+      ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
         child: NavigationBar(
-          backgroundColor: const Color(0xFFDDA15E), // Light orange
+          backgroundColor: const Color(0xFFDDA15E),
           onDestinationSelected: (int index) {
             setState(() {
               currentPageIndex = index;
@@ -176,8 +201,6 @@ class ReportFormPageState extends State<ReportFormPage> {
   final _titleController = TextEditingController();
   final _commentController = TextEditingController();
   final _addressController = TextEditingController();
-  final _latitudeController = TextEditingController();
-  final _longitudeController = TextEditingController();
 
   // Submit form
   void _submitForm() {
@@ -187,9 +210,9 @@ class ReportFormPageState extends State<ReportFormPage> {
         _titleController.text,
         _commentController.text,
         _addressController.text,
-        double.tryParse(_latitudeController.text),
-        double.tryParse(_longitudeController.text),
-        [], // Handle images if needed
+        null,  // No latitude
+        null,  // No longitude
+        [],    // Handle images if needed
       );
 
       // Do something with the Report (e.g., save or print it)
@@ -203,8 +226,6 @@ class ReportFormPageState extends State<ReportFormPage> {
     _titleController.dispose();
     _commentController.dispose();
     _addressController.dispose();
-    _latitudeController.dispose();
-    _longitudeController.dispose();
     super.dispose();
   }
 
@@ -243,6 +264,8 @@ class ReportFormPageState extends State<ReportFormPage> {
                 }
                 return null;
               },
+              maxLines: 5, // Make the comment box taller
+              minLines: 3, // Set a minimum height
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -251,36 +274,6 @@ class ReportFormPageState extends State<ReportFormPage> {
                 labelText: 'Address',
                 border: OutlineInputBorder(),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _latitudeController,
-              decoration: const InputDecoration(
-                labelText: 'Latitude',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value != null && value.isNotEmpty && double.tryParse(value) == null) {
-                  return 'Please enter a valid latitude';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _longitudeController,
-              decoration: const InputDecoration(
-                labelText: 'Longitude',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value != null && value.isNotEmpty && double.tryParse(value) == null) {
-                  return 'Please enter a valid longitude';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 16),
             ElevatedButton(
