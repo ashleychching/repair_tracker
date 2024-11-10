@@ -65,13 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: NavigationBar(
         backgroundColor: const Color.fromARGB(255, 255, 106, 0),
         
-        onDestinationSelected: (int index) {   
-          if (index == 1) {  
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const ReportPage(title: "homepage")));
-          }
-          else if (index == 2) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage(title: "profilepage")));
-          }
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
         },
         indicatorColor: Colors.amber,
         selectedIndex: currentPageIndex,
@@ -101,143 +98,76 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text(
                 'Home page',
                 style: theme.textTheme.titleLarge,
-              ),  
+              ),
             ),
           ),
         ),
-      ][0],
-    );
-  }
-}
 
-//report page
-class ReportPage extends StatefulWidget {
-  const ReportPage({super.key, required this.title});
-
-    final String title;
-
-  @override
-  State<ReportPage> createState() => _ReportPageState();
-}
-
-class _ReportPageState extends State<ReportPage> {
-  int currentPageIndex = 1;
-
-    @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-        
-        onDestinationSelected: (int index) {
-          if (index != 1) {
-            Navigator.pop(context);
-          }
-          if (index == 2) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage(title: "profilepage")));
-          }
-          
-        },
-        indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+        /// Notifications page
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Card(
+                child: ListTile(
+                  leading: Icon(Icons.notifications_sharp),
+                  title: Text('Notification 1'),
+                  subtitle: Text('This is a notification'),
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  leading: Icon(Icons.notifications_sharp),
+                  title: Text('Notification 2'),
+                  subtitle: Text('This is a notification'),
+                ),
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon:  Icon(Icons.add),
-            label: 'Report',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Profile',
-          ),
-        ],
-      ),
-      body: const Column(
-        children: <Widget>[
-          /// Report page
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Card(
-                  child: ListTile(
-                    leading: Icon(Icons.notifications_sharp),
-                    title: Text('Notification 1'),
-                    subtitle: Text('This is a notification'),
+        ),
+
+        /// Profile page
+        ListView.builder(
+          reverse: true,
+          itemCount: 2,
+          itemBuilder: (BuildContext context, int index) {
+            if (index == 0) {
+              return Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  margin: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(
+                    'Hello',
+                    style: theme.textTheme.bodyLarge!
+                        .copyWith(color: theme.colorScheme.onPrimary),
                   ),
                 ),
-                Card(
-                  child: ListTile(
-                    leading: Icon(Icons.notifications_sharp),
-                    title: Text('Notification 2'),
-                    subtitle: Text('This is a notification'),
-                  ),
+              );
+            }
+            return Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                margin: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
-              ],
-            ),
-          ),
-        ]
-      ),
-    );
-  }
-}
-
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key, required this.title});
-
-    final String title;
-
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  int currentPageIndex = 2;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-        
-        onDestinationSelected: (int index) {
-          if (index != 2) {
-            Navigator.pop(context);
-          }
-          if (index == 1) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const ReportPage(title: "homepage")));            
-          }
-        },
-        indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon:  Icon(Icons.add),
-            label: 'Report',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Profile',
-          ),
-        ],
-      ),
-      body: const Column(
-        children: <Widget>[
-          /// Report page
-          
-        ]
-      ),
+                child: Text(
+                  'Hi!',
+                  style: theme.textTheme.bodyLarge!
+                      .copyWith(color: theme.colorScheme.onPrimary),
+                ),
+              ),
+            );
+          },
+        ),
+      ][currentPageIndex],
     );
   }
 }
