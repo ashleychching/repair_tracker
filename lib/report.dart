@@ -9,7 +9,7 @@ class Report {
   double? latitude;
   double? longitude;
 
-  Array? images;
+  List<String>? images;
 
   Report (this.title, this.comment, this.address, this.latitude, this.longitude, this.images);
 

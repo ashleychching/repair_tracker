@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'report.dart';
+import 'report.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           indicatorColor: const Color(0xFF606C38), // Light green
           indicatorShape: const CircleBorder(), // Circle shape for indicator
-          indicatorPadding: const EdgeInsets.all(16), // Padding to make the circle bigger
+
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
@@ -114,27 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
 
         /// report page
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
-          ),
-        ),
+        const ReportFormPage(),
 
         /// Profile page
         ListView.builder(
@@ -178,6 +158,138 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       ][currentPageIndex],
+    );
+  }
+}
+
+class ReportFormPage extends StatefulWidget {
+  const ReportFormPage({super.key});
+
+  @override
+  ReportFormPageState createState() => ReportFormPageState();
+}
+
+class ReportFormPageState extends State<ReportFormPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  // Declare controllers for each form field
+  final _titleController = TextEditingController();
+  final _commentController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _latitudeController = TextEditingController();
+  final _longitudeController = TextEditingController();
+
+  // Submit form
+  void _submitForm() {
+    if (_formKey.currentState?.validate() ?? false) {
+      // Create a Report instance when form is submitted
+      Report newReport = Report(
+        _titleController.text,
+        _commentController.text,
+        _addressController.text,
+        double.tryParse(_latitudeController.text),
+        double.tryParse(_longitudeController.text),
+        [], // Handle images if needed
+      );
+
+      // Do something with the Report (e.g., save or print it)
+      print("Report Submitted: ${newReport.title}");
+    }
+  }
+
+  @override
+  void dispose() {
+    // Dispose of controllers to avoid memory leaks
+    _titleController.dispose();
+    _commentController.dispose();
+    _addressController.dispose();
+    _latitudeController.dispose();
+    _longitudeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                labelText: 'Title',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a title';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _commentController,
+              decoration: const InputDecoration(
+                labelText: 'Comment',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a comment';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _addressController,
+              decoration: const InputDecoration(
+                labelText: 'Address',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _latitudeController,
+              decoration: const InputDecoration(
+                labelText: 'Latitude',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value != null && value.isNotEmpty && double.tryParse(value) == null) {
+                  return 'Please enter a valid latitude';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _longitudeController,
+              decoration: const InputDecoration(
+                labelText: 'Longitude',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value != null && value.isNotEmpty && double.tryParse(value) == null) {
+                  return 'Please enter a valid longitude';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _submitForm,
+              child: const Text('Submit Report'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
