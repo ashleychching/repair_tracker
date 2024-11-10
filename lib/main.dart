@@ -128,15 +128,42 @@ class _MyHomePageState extends State<MyHomePage> {
         Card(
           shadowColor: Colors.transparent,
           margin: const EdgeInsets.all(8.0),
+          color: const Color(0xFFFEFAE0),  // Set the background color to match the app's background
           child: SizedBox.expand(
-            child: Center(
-              child: Text(
-                'Home page',
-                style: theme.textTheme.titleLarge,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,  // Align text to the left (optional)
+              children: [
+                // Title "Repairs Near Me"
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Repairs Near Me',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+                // Divider below the title
+                const Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                ),
+                // Content for Home page can go here
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Home page',
+                      style: theme.textTheme.titleLarge,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
+
+
 
         /// report page
         const ReportFormPage(),
@@ -238,6 +265,21 @@ class ReportFormPageState extends State<ReportFormPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            // Title "Report Fix"
+            Text(
+              'Report Fix',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+            ),
+            const SizedBox(height: 8),  // Space between title and line
+            // Line below the title
+            const Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _titleController,
               decoration: const InputDecoration(
