@@ -1,4 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+
+Future<LocationData?> _currentLocation() async {
+  bool serviceEnabled;
+  PermissionStatus permissionGranted;
+ 
+  Location location = Location();
+ 
+  serviceEnabled = await location.serviceEnabled();
+  if (!serviceEnabled) {
+    serviceEnabled = await location.requestService();
+    if (!serviceEnabled) {
+      return null;
+    }
+  }
+ 
+  permissionGranted = await location.hasPermission();
+  if (permissionGranted == PermissionStatus.denied) {
+    permissionGranted = await location.requestPermission();
+    if (permissionGranted != PermissionStatus.granted) {
+      return null;
+    }
+  }
+  return await location.getLocation();
+}
 
 class MapQuestStaticMap extends StatelessWidget {
   final String apiKey = 'jcOvjOSScAInBDkrNoNea3L4WX07iNGr';
