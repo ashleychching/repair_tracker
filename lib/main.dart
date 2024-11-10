@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'locations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,6 +57,16 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 class _MyHomePageState extends State<MyHomePage> {
+  Future<LatLng?> fetchCoordinates(String address) async {
+    final geocodingService = GeocodingService();
+    final coordinates = await geocodingService.getCoordinatesFromAddress(address);
+
+    if (coordinates != null) {
+      return LatLng(coordinates['latitude']!, coordinates['longitude']!);
+    } else {
+      return null;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -74,31 +85,42 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Stack(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            child: SizedBox(
-                width: 300,
-                height: 300,
-                child: FlutterMap(
-                  options: const MapOptions(
-                    initialCenter: LatLng(51, -0.1),
-                    initialZoom: 18,
-                  ),
-                  children: [
-                    TileLayer(
-                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'com.example.org',
+      body: FutureBuilder<LatLng?>(
+        future: fetchCoordinates("New York, NY"), // Replace with desired address
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError || !snapshot.hasData) {
+            return const Center(child: Text("Failed to load coordinates"));
+          } else {
+            LatLng initialCenter = snapshot.data!;
+
+            return Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: SizedBox(
+                    width: 300,
+                    height: 300,
+                    child: FlutterMap(
+                      options: MapOptions(
+                        initialCenter: initialCenter, // Use the fetched coordinates
+                        initialZoom: 18,
+                      ),
+                      children: [
+                        TileLayer(
+                          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          userAgentPackageName: 'com.example.org',
+                        ),
+                      ],
                     ),
-                  ],
-                )
-              ),
-            )
-        ],
+                  ),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
