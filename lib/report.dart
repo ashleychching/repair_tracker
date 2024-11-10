@@ -70,7 +70,7 @@ class Report {
       '&center=$latitude,$longitude'
       '&size=$height,$width'
       '&zoom=17'
-      '&markers=$latitude,$longitude'
+      '&locations=$latitude,$longitude'
     );
     return url.toString();
   }

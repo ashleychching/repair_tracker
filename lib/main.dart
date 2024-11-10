@@ -11,7 +11,7 @@ class MapQuestStaticMap extends StatelessWidget {
       '&center=$latitude,$longitude'
       '&size=$size'
       '&zoom=$zoom'
-      '&markers=$latitude,$longitude'
+      '&locations=$latitude,$longitude'
     );
     return url.toString();
   }
