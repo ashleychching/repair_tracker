@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'report.dart';
 
 void main() {
   runApp(const MyApp());
@@ -62,6 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
       bottomNavigationBar: NavigationBar(
+        backgroundColor: const Color.fromARGB(255, 255, 106, 0),
+        
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
