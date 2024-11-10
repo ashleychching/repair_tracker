@@ -62,31 +62,41 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-        
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon:  Icon(Icons.add),
-            label: 'Report',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Profile',
-          ),
-        ],
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+        child: NavigationBar(
+          backgroundColor: const Color(0xFFDDA15E), // Light orange
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+          indicatorColor: const Color(0xFF606C38), // Light green
+          indicatorShape: const CircleBorder(), // Circle shape for indicator
+          indicatorPadding: const EdgeInsets.all(16), // Padding to make the circle bigger
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home, color: Colors.white),
+              icon: Icon(Icons.home_outlined, color: Colors.white),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.add, color: Colors.white),
+              icon: Icon(Icons.add, color: Colors.white),
+              label: '',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.account_circle, color: Colors.white),
+              icon: Icon(Icons.account_circle_outlined, color: Colors.white),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
       body: <Widget>[
         /// Home page
@@ -103,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
 
-        /// Notifications page
+        /// report page
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Column(
