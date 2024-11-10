@@ -73,9 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage(title: "profilepage")));
           }
         },
-
+              
         indicatorColor: const Color(0xFF606C38), // Light green
         indicatorShape: const CircleBorder(), // Circle shape for indicator
+        indicatorPadding: const EdgeInsets.all(16), // Padding to make the circle bigger
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
@@ -142,10 +143,7 @@ class _ReportPageState extends State<ReportPage> {
           }
           
         },
-
-        indicatorColor: const Color(0xFF606C38), // Light green
-        indicatorShape: const CircleBorder(), // Circle shape for indicator
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        indicatorColor: Colors.amber,
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
@@ -220,10 +218,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const ReportPage(title: "homepage")));            
           }
         },
-        
-        indicatorColor: const Color(0xFF606C38), // Light green
-        indicatorShape: const CircleBorder(), // Circle shape for indicator
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        indicatorColor: Colors.amber,
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
