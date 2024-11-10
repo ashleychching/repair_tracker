@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'report.dart'; 
 
 void main() {
@@ -179,6 +180,8 @@ class ReportFormPageState extends State<ReportFormPage> {
   final _latitudeController = TextEditingController();
   final _longitudeController = TextEditingController();
 
+  String src = 'https://www.mapquestapi.com/geocoding/v1/address?key=$apiKey&center=40,40&size=400,400&zoom=17';
+
   // Submit form
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -195,6 +198,15 @@ class ReportFormPageState extends State<ReportFormPage> {
       // Do something with the Report (e.g., save or print it)
       print("Report Submitted: ${newReport.title}");
     }
+  }
+  Future<void> _getLocation() async{
+    LocationData? location = await getCurrentLocation();
+    double lat = location?.latitude ?? 0;
+    double lon = location?.longitude ?? 0;
+    _addressController.text = await getAddressFromCoordinates(lat, lon);
+    _latitudeController.text = (lat).toString();
+    _latitudeController.text = (lon).toString();
+    src = 'https://www.mapquestapi.com/geocoding/v1/address?key=$apiKey&center=$lat,$lon&size=400,400&zoom=17&markers=$lat,$lon';
   }
 
   @override
@@ -281,6 +293,17 @@ class ReportFormPageState extends State<ReportFormPage> {
                 }
                 return null;
               },
+            ),
+            const SizedBox(height: 16),
+            Container(
+              width: 140,
+              decoration: BoxDecoration(border: Border.all()),
+              child: const Text(overflow: TextOverflow.ellipsis, 'Use Current Location')
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _getLocation,
+              child: Image.network(src)
             ),
             const SizedBox(height: 16),
             ElevatedButton(

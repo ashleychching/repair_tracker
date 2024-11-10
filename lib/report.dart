@@ -1,8 +1,33 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 const String apiKey = 'jcOvjOSScAInBDkrNoNea3L4WX07iNGr';
+
+Future<LocationData?> getCurrentLocation() async {
+  bool serviceEnabled;
+  PermissionStatus permissionGranted;
+ 
+  Location location = Location();
+ 
+  serviceEnabled = await location.serviceEnabled();
+  if (!serviceEnabled) {
+    serviceEnabled = await location.requestService();
+    if (!serviceEnabled) {
+      return null;
+    }
+  }
+ 
+  permissionGranted = await location.hasPermission();
+  if (permissionGranted == PermissionStatus.denied) {
+    permissionGranted = await location.requestPermission();
+    if (permissionGranted != PermissionStatus.granted) {
+      return null;
+    }
+  }
+  return await location.getLocation();
+}
 
 Future<LatLng?> getCoordinatesFromAddress(String address) async {
   final url = Uri.parse('https://www.mapquestapi.com/geocoding/v1/address?key=$apiKey&location=${Uri.encodeComponent(address)}',);
@@ -26,6 +51,30 @@ Future<LatLng?> getCoordinatesFromAddress(String address) async {
     return null;
   }
 }
+Future<String> getAddressFromCoordinates(double latitude, double longitude) async {
+    final String url = 'https://www.mapquestapi.com/geocoding/v1/reverse?key=$apiKey&location=$latitude,$longitude';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        
+        // Extract the address from the response
+        final address = data['results'][0]['locations'][0]['street'];
+        final city = data['results'][0]['locations'][0]['adminArea5'];
+        final state = data['results'][0]['locations'][0]['adminArea3'];
+        final postalCode = data['results'][0]['locations'][0]['postalCode'];
+
+        // Return the full address
+        return '$address, $city, $state, $postalCode';
+      } else {
+        throw Exception('Failed to load address');
+      }
+    } catch (e) {
+      return 'Error: $e';
+    }
+  }
 // Function to get the latitude and longitude from an address as an Array
 Future<List<double>?> getLatLongFromAddress(String address) async {
   final String apiUrl = 'http://www.mapquestapi.com/geocoding/v1/address?key=$apiKey&location=$address';
